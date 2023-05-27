@@ -1,3 +1,0 @@
-- need optimize manifest file
-- need write user data file to install all necessary utilities (curl, git, ....)
-- research more volume, ip, firewall etc

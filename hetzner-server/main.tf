@@ -15,11 +15,11 @@ provider "hcloud" {
 # ssh key to connect
 resource "hcloud_ssh_key" "default" {
   name       = "hetzner_key"
-  public_key = file("~/.ssh/id_demo.pub")
+  public_key = file("~/.ssh/id_rsa.pub")
 }
 resource "hcloud_server" "web" {
-  count       = var.instances
-  name        = "aiga-${count.index}"
+  # count       = var.instances
+  name        = "web-server"
   image       = var.os_type
   server_type = var.server_type
   location    = var.location
@@ -27,5 +27,5 @@ resource "hcloud_server" "web" {
   labels = {
     type = "aiga"
   }
-  user_data = file("user-data.sh")
+  # user_data = file("user-data.sh")
 }

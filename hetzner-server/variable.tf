@@ -1,6 +1,9 @@
 variable "hcloud_token" {
-  default = "your-token"
+  type = string
+  description = "HCloud token"
+  default = ""
 }
+
 
 variable "location" {
   default = "nbg1"
