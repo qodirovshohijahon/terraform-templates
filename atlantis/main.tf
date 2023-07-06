@@ -21,6 +21,8 @@ provider "aws" {
   secret_key = var.secret_key
 }
 
+resource "aws_default_vpc" "default" {} # This need to be added since AWS Provider v4.29+ to get VPC id
+
 resource "tls_private_key" "example" {
   algorithm = "RSA"
   rsa_bits  = 4096
@@ -36,7 +38,7 @@ resource "aws_key_pair" "generated_key" {
 }
 
 
-resource "aws_instance" "ec2-demo-two" {
+resource "aws_instance" "jenkins" {
   ami                    = "ami-0574da719dca65348" // Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-12-01
   instance_type          = var.instance_size
   vpc_security_group_ids = [aws_security_group.jenkins-sg.id]
@@ -47,13 +49,30 @@ resource "aws_instance" "ec2-demo-two" {
     Owner = "Mustofa Kodirov"
   }
 
+  # connection {
+  #   type        = "ssh"
+  #   user        = "ubuntu"
+  #   private_key = file("${path.module}/id_rsa")
+  #   host        = self.public_ip
+  # }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "ifconfig > /tmp/ifconfig.output",
+  #     "echo 'hello gaurav'>/tmp/test.txt"
+  #   ]
+  # }
+  # provisioner "remote-exec" {
+  #   script = "./testscript.sh"
+  # }
+}
+
 resource "aws_security_group" "jenkins-sg" {
   name        = "Jenkins-SG"
   description = "Security Group for my JenkinsServer"
   vpc_id      = aws_default_vpc.default.id # This need to be added since AWS Provider v4.29+ to set VPC id
 
   dynamic "ingress" {
-    for_each = ["80", "8080", "8000", "22"]
+    for_each = ["80", "9090", "3000", "8080", "4141", "22"]
     content {
       description = "Allow port HTTP"
       from_port   = ingress.value
